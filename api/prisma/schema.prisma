@@ -11,56 +11,69 @@ enum BankAccountType {
   CHECKING
   INVESTMENT
   CASH
+
+  @@map("bank_account_type")
 }
 
-// enum TransactionType {
-//   EXPENSE
-//   INCOME
-// }
+enum TransactionType {
+  EXPENSE
+  INCOME
+
+  @@map("transaction_type")
+}
 
 model User {
-  id       String @id @default(uuid())
-  name     String
-  email    String @unique
-  password String
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  password     String
+  bankAccounts BankAccount[]
+  categories   Category[]
+  transactions Transaction[]
 
   @@map("users")
 }
 
-// model BankAccount {
-//   id             String          @id @default(uuid())
-//   userId         String
-//   user           User            @relation(fields: [userId], references: [id])
-//   name           String
-//   initialBalance Float
-//   type           BankAccountType
-//   color          String
-// }
+model BankAccount {
+  id             String          @id @default(uuid())
+  userId         String          @map("user_id")
+  name           String
+  initialBalance Float           @map("initial_balance")
+  type           BankAccountType
+  color          String
 
-// model Category {
-//   id          String          @id @default(uuid())
-//   userId      String
-//   user        User            @relation(fields: [userId], references: [id])
-//   name        String
-//   icon        String
-//   type        TransactionType
-//   Transaction Transaction[]
-// }
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
 
-// model Transaction {
-//   id String @id @default(uuid())
+  @@map("bank_accounts")
+}
 
-//   userId String
-//   user   User   @relation(fields: [userId], references: [id])
+model Category {
+  id     String          @id @default(uuid())
+  userId String          @map("user_id")
+  name   String
+  icon   String
+  type   TransactionType
 
-//   backAccountId String
-//   bankAccount   BankAccount @relation(fields: [backAccountId], references: [id])
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
 
-//   categoryId String
-//   category   Category @relation(fields: [categoryId], references: [id])
+  @@map("categories")
+}
 
-//   name  String
-//   value Float
-//   date  DateTime        @default(now())
-//   type  TransactionType
-// }
+model Transaction {
+  id            String          @id @default(uuid())
+  backAccountId String          @map("bank_account_id")
+  categoryId    String?         @map("category_id")
+  userId        String          @map("user_id")
+  name          String
+  value         Float
+  date          DateTime        @default(now())
+  type          TransactionType
+
+  bankAccount BankAccount @relation(fields: [backAccountId], references: [id], onDelete: Cascade)
+  category    Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}
