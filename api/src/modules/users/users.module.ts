@@ -7,7 +7,6 @@ import { BcryptJsService } from 'src/shared/encrypt/bcrypt-js/bcrypt-js.service'
 import { DatabaseModule } from 'src/shared/database/database.module';
 
 @Module({
-  imports: [DatabaseModule],
   controllers: [UsersController],
   providers: [UsersService, BcryptJsService],
 })
