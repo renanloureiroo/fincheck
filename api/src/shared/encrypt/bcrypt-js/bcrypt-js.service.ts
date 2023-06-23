@@ -1,4 +1,4 @@
-import { IEncrypt } from './../encrypt.interface';
+import { IEncrypt } from '../encrypt.interface';
 import { Injectable } from '@nestjs/common';
 
 import { hash, compare } from 'bcryptjs';
