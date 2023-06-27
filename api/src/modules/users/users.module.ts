@@ -4,8 +4,6 @@ import { UsersController } from './users.controller';
 
 import { BcryptJsService } from 'src/shared/encrypt/bcrypt-js/bcrypt-js.service';
 
-import { DatabaseModule } from 'src/shared/database/database.module';
-
 @Module({
   controllers: [UsersController],
   providers: [UsersService, BcryptJsService],
